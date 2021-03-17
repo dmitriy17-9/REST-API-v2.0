@@ -3,6 +3,7 @@ import datetime
 from flask import Flask, render_template, redirect, request, make_response, session, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
+from data.jobs import Jobs
 from data.users import User
 from forms.jobs import JobsForm
 from forms.user import LoginForm, RegisterForm
@@ -21,9 +22,59 @@ def load_user(user_id):
 
 
 def add_users(db_sess):
-    user1 = User(surname="Scott", name="Ridley", age=21, position="captain", speciality="research engineer",
-                 address="module_1", email="scott_chief@mars.org")
+    user1 = User(surname="Scott",
+                 name="Ridley",
+                 age=21,
+                 position="captain",
+                 speciality="research engineer",
+                 address="module_1",
+                 email="scott_chief@mars.org",
+                 hashed_password="cap")
+    user2 = User(surname="Andy",
+                 name="Weir",
+                 age=19,
+                 position="colonist",
+                 speciality="pilot",
+                 address="module_2",
+                 email="andy_col@mars.org",
+                 hashed_password="pil")
+    user3 = User(surname="Mark",
+                 name="Watney",
+                 age=21,
+                 position="colonist",
+                 speciality="doctor",
+                 address="module_3",
+                 email="doc_mark@mars.org",
+                 hashed_password="doc")
+    user1.set_password(user1.hashed_password)
+    user2.set_password(user2.hashed_password)
+    user3.set_password(user3.hashed_password)
     db_sess.add(user1)
+    db_sess.add(user2)
+    db_sess.add(user3)
+    db_sess.commit()
+
+
+def add_jobs(db_sess):
+    job1 = Jobs(team_leader=1,
+                job="deployment of residential modules 1 and 2",
+                work_size=15,
+                collaborators="2, 3",
+                is_finished=False)
+    job2 = Jobs(team_leader=2,
+                job="exploration of mineral resources",
+                work_size=12,
+                collaborators="4, 3",
+                is_finished=False)
+    job3 = Jobs(team_leader=3,
+                job="development of a management system",
+                work_size=25,
+                collaborators="5",
+                is_finished=False)
+
+    db_sess.add(job1)
+    db_sess.add(job2)
+    db_sess.add(job3)
     db_sess.commit()
 
 
@@ -99,7 +150,8 @@ def main():
     db_session.global_init(db_name)
     db_sess = db_session.create_session()
 
-    # add_users(db_sess)
+    add_users(db_sess)
+    add_jobs(db_sess)
 
     app.run(port=8080, host='127.0.0.1')
 

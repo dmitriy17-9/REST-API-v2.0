@@ -19,4 +19,4 @@ class Jobs(SqlAlchemyBase):
     user = orm.relation('User')
 
     def __repr__(self):
-        return f"<User> {self.id} {self.name} {self.email} {self.created_date}"
+        return f"<Job> {self.job}"
