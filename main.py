@@ -1,5 +1,7 @@
 import datetime
+import os
 
+from waitress import serve
 from flask import Flask, render_template, redirect, request, make_response, session, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_restful import Api
@@ -104,7 +106,11 @@ def main():
     # add_user()
     # add_jobs()
 
-    app.run(port=8080, host='127.0.0.1')
+    port = int(os.environ.get('PORT', 5000))
+    # app.run(port=port, host="0.0.0.0")
+
+    # с дефаултными значениями будет не более 4 потов
+    serve(app, port=port, host="0.0.0.0")
 
 
 if __name__ == '__main__':
