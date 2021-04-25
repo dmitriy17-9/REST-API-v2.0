@@ -6,7 +6,7 @@ from flask import Flask, render_template, redirect, request, make_response, sess
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_restful import Api
 
-from data import db_session, jobs_api, users_resource
+from data import db_session, users_resource, jobs_resource
 from data.jobs import Jobs
 from data.users import User
 from forms.jobs import JobsForm
@@ -22,6 +22,10 @@ api.add_resource(users_resource.UsersListResource, '/api/v2/users')
 # для одного объекта
 api.add_resource(users_resource.UserResource, '/api/v2/users/<int:user_id>')
 
+# для списка объектов
+api.add_resource(jobs_resource.JobsListResource, '/api/v2/jobs')
+# для одного объекта
+api.add_resource(jobs_resource.JobsResource, '/api/v2/jobs/<int:jobs_id>')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -106,7 +110,7 @@ def main():
     # add_user()
     # add_jobs()
 
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 8080))
     # app.run(port=port, host="0.0.0.0")
 
     # с дефаултными значениями будет не более 4 потов
